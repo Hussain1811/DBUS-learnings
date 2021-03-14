@@ -1,0 +1,93 @@
+What is DBUS?
+
+Geenric IPC system for linux and other POSIX OS (like UNIX etc).
+
+Work is going on for porting on Windows.
+
+There are bindings for numerous programming languages.
+It is used to expose the interfaces of systemd.
+
+Where DBUS is used?
+
+Systemd uses it with a trasnport like ssh to make it's APIs accessible remotely.
+
+Why DBUS? 
+
+Doesn't exchange raw bytes between processes like how FIFO etc 
+
+DBUS libraries?
+
+1)C libs:
+Libdbus:  it's old (was written at the time of D-Bus specification); Suitable for lowest level system software
+
+GDBUS: Easy to expose Gobject objects on the bus; Translates DBUS data type o Gvariant; Better to use it for Glib-style programming
+
+SD-BUS: recent one; best for linux platform; better performance; internally used in systemd
+
+2)C++ libs:
+QtDbus: wrapper around libDBus
+
+DBUS Concepts/terminologies:
+
+1)BUS => a channel to connect to two peers. Types are:
+System bus: one per system; system services are on this bus
+
+User/session bus: 'N' number of session buses can be there. Every login to the session creates a new bus.
+In future, per user one bus will be there; user related services are on this bus
+
+Session Bus is a bus for one particular session. Suppose if sadiq has logged in, then he can use only 'X' session bus. If shakir is logged in, then he can use only 'Y' session bus and not the 'X' session bus. Once they are done, they will close 'X' and 'Y' session buses respectively. 
+
+2)SERVICE ==> a server which exposes some API's/methods for communication
+Ex: org.freedesktop.login1
+
+3)CLIENT => the one which consumes service from the service provider; it talks to a service basically
+
+NOTE: Peer could be a service or a client.
+
+4)OBJECT PATH => service exposes everything as an object. Object path is an identifier for an object on a specific service; neatly arranged as a tree
+Ex: /org/freedesktop/login1 is the object path of the 'manager' object of the org.freedesktop.login1 service
+
+5INTERFACES ==> Each object that is identified by an object path has one or more interfaces
+
+Interfaces are a collection of signature, signals, methods and properties which are exposed by a service to the client.
+Signature ==> Set of parameters a method/signature/property takes or returns.
+
+Signals ==> for general notification from the service to all peers that are connected on the bus; it is one to many.
+It is used for broadcasting.
+
+Methods ==> it is one to one communication because two remote peers. One peer invokes one of these methods on another peer and gets a reply.
+
+While in a method call a single client issues a request on a single service, and that service sends back a response to the client, signals are for general notification of peers. Services send them out when they want to tell one or more peers on the bus that something happened or changed.
+
+Hierarchy is something like: you have a service; within that we have some object or object path; within that we have an interface; within that we finally have methods/signals/properties of the service which will be called by the client
+
+Properties ==> remote peer's variable which can be queried.
+
+DBUS utilities:
+
+Busctl => provided by SD-BUS
+
+Ex: busctl call org.freedesktop.login1 /org/freedesktop/login1/session/c1 org.freedesktop.login1.Session Lock
+Above example will lock your ubuntu.
+
+Service name is "org.freedesktop.login1"
+Object path is "/org/freedesktop/login1/session/c1"
+Interface is "org.freedesktop.login1.Session"
+Method is "Lock"
+
+DBus-Monitor ==> from libDBus
+
+All the signals, methods and interfaces are put together in an XML file.
+This XML file is fed to auto-code generation utility of GDBUS after which you will get a .h header file and a .c C source file template.
+This C source file template needs to be extended by you so as to implement for your use-case.
+Ex: gdbus-codegen --xml-file <XML_FILE> --generate-c-code <file_name>
+
+
+
+
+
+
+
+On the system bus access to services is tightly controlled. So, unprivileged clients cannot request privileged operations. On the user bus however things are simpler: as only processes of the user owning the bus can connect
+
+http://0pointer.net/blog/the-new-sd-bus-api-of-systemd.html ==> for sample programs and nice intro 
