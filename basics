@@ -1,0 +1,22 @@
+There is a bus and you need to connect to it.
+
+Local procedure calls: Calling functions in your process/program. All variables, memory can be easily accessed.
+
+Remote Procedure calls: Here, a client calls a function which is implemented by the remote side( i.e. by server or also called service provider). So, we can't easily call those functions as the service provider is another process. You won't have easy access to variables, memory etc. Hence, there is a framework called DBUS which makes this happen with ease. It takes care of how arguments are consumed and given to the remote side, how those arguments are processed on the remote side and how the answers are sent back as reply to the client.
+
+There are many libraries such as SD-BUS, GLIB DBUS/GDBUS etc which implement this DBUS framework.
+SD-BUS --> pure C based implementation
+GLIB DBUS/GDBUS ---> A DBUS impl with GLIB bindings i.e. an implementation where object oriented stuff (via GOBJECT) are realized using C.
+
+Above flavours can be on either client side or server side or both. 
+Ex: client can use SD-BUS api's to put data on bus. But, server/service provider side can use GLIB api's to consume that data.
+
+There are some advantages & disadvantages of both SD-BUS and GDBUS.
+
+DBUS gives out some specifications and these SD-BUS and GDBUS should adhere to these specifications/rules while implementing.
+
+All daemons are implemented using SD-BUS.
+
+
+
+Client ---> DBUS/RPC ---> Server
