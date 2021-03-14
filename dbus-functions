@@ -1,0 +1,12 @@
+sd_bus_message_new_method_call() ---> a "request" handle is returned which is used by the client for further stuff.
+
+sd_bus_message_append_array() ---> appending the data that needs to be sent to the above handle.
+
+sd_bus_call() ---> sending the above data using the request handle to the server side. This returns a "reply" handle i.e.             the server side will reply back some stuff in this "reply" handle -----------------------------------(*)
+
+sd_bus_message_read() -----> read/parse the stuff present in the reply handle. The status of the read is returned in "reply_result".
+
+Once (*) is done, then we will end up in the server/service side. Let's say this server side has a GDBUS based implementation.
+
+In GDBUS, an event source is created. This event source is initialized i.e. all callbacks are set using g_bus_own_name()and later attached to some context (if no context is specified, then a default context is used).
+Then g_main_loop_run() is invoked. This will poll for events and calls the corresponding event handler (i.e. the above set callbacks are called) once an event occurs.
