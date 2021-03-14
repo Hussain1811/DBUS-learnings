@@ -1,0 +1,33 @@
+It is a high-level IPC i.e. it is built on top of IPC's such as sockets, message passing etc so as to communicate between applications/processes running in the same machine.
+
+DBUS daemon(message bus)
+
+DBUS library (bindings could be from JAVA/C/C++)
+
+From above flowchart, architecturally, DBUS has several layers: 
+	• A library, libdbus, that allows two applications to connect to each other and exchange messages. 
+	• A message bus daemon executable, built on libdbus, that multiple applications can connect to. The daemon can route messages from one application to zero or more other applications. The daemon/message bus is like a router.
+
+As the name implies, D-Bus uses a logical "Bus". This  bus(called message bus) accepts connections from one or more applications. Once connected, applications can exchange messages with other applications(via the library) that are also connected to the bus.
+
+If there are IPC's, then why DBUS? => 
+1)It is intended to replace the amalgam of competing IPC frameworks in this domain with a single, unified protocol that is tailored specifically for meeting the needs of secure, intra-system IPC.
+
+2)D-Bus is easy to use because it works in terms of messages rather than byte streams, and automatically handles a lot of the hard IPC issues. Also, the D-Bus library is designed to be wrapped in a way that lets developers use their framework's existing object/type system, rather than learning a new one specifically for IPC. 
+
+3)Better security. 
+
+There are two primary use-cases for which D-Bus is designed:
+	• As a "system bus" for communicating between system applications and user sessions 
+	• As a "session bus" for exhanging data between applications in a desktop environments 
+
+https://dbus.freedesktop.org/doc/dbus-specification.html 
+
+https://dbus.freedesktop.org/doc/dbus-api-design.html
+
+https://dbus.freedesktop.org/doc/dbus-daemon.1.html
+
+https://dbus.freedesktop.org/doc/dbus-monitor.1.html
+
+https://bootlin.com/pub/conferences/2016/meetup/dbus/josserand-dbus-meetup.pdf ----> nice pdf
+
